@@ -1,5 +1,3 @@
-require_relative '../lib/main'
-require_relative '../lib/player'
 require_relative '../lib/cage'
 
 # Here is a summary of what should be tested
@@ -41,13 +39,13 @@ describe Cage do
       context 'when the cage has 1, 2, 3, 4, 3, 2, 1 tokens in the columns' do
         before do
           board_to_set = [
-            %w[x o o o o o],
-            %w[x x o o o o],
-            %w[x x x o o o],
-            %w[x x x x o o],
-            %w[x x x o o o],
-            %w[x x o o o o],
-            %w[x o o o o o]
+            %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+            %w[⚫ ⚫ ⚪ ⚪ ⚪ ⚪],
+            %w[⚫ ⚫ ⚫ ⚪ ⚪ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚪ ⚪],
+            %w[⚫ ⚫ ⚫ ⚪ ⚪ ⚪],
+            %w[⚫ ⚫ ⚪ ⚪ ⚪ ⚪],
+            %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪]
           ]
           initialized_cage.instance_variable_set(:@board, board_to_set)
         end
@@ -63,13 +61,13 @@ describe Cage do
       context 'when the cage has one row left' do
         before do
           board_to_set = [
-            %w[x x x x x o],
-            %w[x x x x x o],
-            %w[x x x x x o],
-            %w[x x x x x o],
-            %w[x x x x x o],
-            %w[x x x x x o],
-            %w[x x x x x o]
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪]
           ]
           initialized_cage.instance_variable_set(:@board, board_to_set)
         end
@@ -85,19 +83,20 @@ describe Cage do
       context 'when there is no possible moves in the cage' do
         before do
           board_to_set = [
-            %w[x x x x x x],
-            %w[x x x x x x],
-            %w[x x x x x x],
-            %w[x x x x x x],
-            %w[x x x x x x],
-            %w[x x x x x x],
-            %w[x x x x x x]
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫]
           ]
           initialized_cage.instance_variable_set(:@board, board_to_set)
         end
-        it 'returns nil' do
+        it 'returns nil array' do
           possible_moves = initialized_cage.possible_moves
-          expect(possible_moves).to be_nil
+          nil_array = Array.new(7, nil)
+          expect(possible_moves).to eq(nil_array)
         end
       end
     end
@@ -115,11 +114,19 @@ describe Cage do
   end
 
   describe '#validate_input' do
-    subject(:initialized_cage) { described_class.new }
+    subject(:input_loop) { described_class.new }
 
     context 'when presented with two invalid and one valid inputs' do
-      xit 'throws an error two times and then returns the valid input' do
+      before do
+        letter = 's'
+        wrong_number = '8'
+        valid_input = '3'
+        allow(input_loop).to receive(:player_input).and_return(letter, wrong_number, valid_input)
+      end
 
+      it 'throws an error two times and then returns the valid input' do
+        expect(input_loop).to receive(:puts).with('Invalid input!').twice
+        input_loop.player_turn
       end
     end
   end
@@ -132,13 +139,13 @@ describe Cage do
         initialized_cage.place_token(3)
         board = initialized_cage.instance_variable_get(:@board)
         board_with_a_new_token = [
-          %w[o o o o o o],
-          %w[o o o o o o],
-          %w[o o o o o o],
-          %w[x o o o o o],
-          %w[o o o o o o],
-          %w[o o o o o o],
-          %w[o o o o o o]
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪]
         ]
         expect(board).to eq(board_with_a_new_token)
       end
@@ -152,14 +159,136 @@ describe Cage do
 
     context 'when the input is wrong' do
       context 'when a full column two times in a row and then a possible move' do
-        xit 'throws a warning two times until the input is correct' do
-          # Fill the test after testing the input validation
+        before do
+          board_to_set = [
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚪],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫],
+            %w[⚫ ⚫ ⚫ ⚫ ⚫ ⚫]
+          ]
+          initialized_cage.instance_variable_set(:@board, board_to_set)
+          allow(initialized_cage).to receive(:player_input).and_return('3', '4', '5')
+        end
+        it 'throws a warning two times until the input is correct' do
+          expect(initialized_cage).to receive(:puts).with('Invalid input!').twice
+          initialized_cage.player_turn
         end
       end
     end
   end
-end
 
-describe Player do
+  describe '#game_loop' do
+    subject(:initialized_cage) { described_class.new }
+    context 'after the first player has placed his token' do
+      before do
+        allow(initialized_cage).to receive(:player_input).and_return('3', '3')
+      end
 
+      xit 'the second player places his next turn' do
+        end_state = [
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ☉ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+        ]
+        board = initialized_cage.instance_variable_get(:@board)
+        initialized_cage.game_loop
+        expect(board).to eq(end_state)
+      end
+    end
+  end
+
+  describe '#game_over?' do
+    subject(:endgame_cage) { described_class.new }
+
+    context '4 vertically consecutive tokens' do
+      before do
+        end_state = [
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚫ ⚫ ⚫ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+        ]
+        endgame_cage.instance_variable_set(:@board, end_state)
+        endgame_cage.instance_variable_set(:@last_column_index, 2)
+        endgame_cage.instance_variable_set(:@last_free_space, 3)
+      end
+      
+      it 'wins' do
+        expect(endgame_cage).to be_game_over
+      end
+    end
+
+    context '4 diagonally consecutive tokens' do
+      before do
+        end_state = [
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚫ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚫ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚫ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+        ]
+        endgame_cage.instance_variable_set(:@board, end_state)
+        endgame_cage.instance_variable_set(:@last_column_index, 5)
+        endgame_cage.instance_variable_set(:@last_free_space, 3)
+      end
+      
+      it 'wins' do
+        expect(endgame_cage).to be_game_over
+      end
+    end
+    
+    context '4 horizontally consecutive tokens' do
+      before do
+        end_state = [
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+        ]
+        endgame_cage.instance_variable_set(:@board, end_state)
+        endgame_cage.instance_variable_set(:@last_column_index, 5)
+        endgame_cage.instance_variable_set(:@last_free_space, 0)
+      end
+      
+      it 'wins' do
+        expect(endgame_cage).to be_game_over
+      end
+    end
+    
+    context 'a possible real-life situation' do
+      before do
+        end_state = [
+          %w[☉ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[☉ ⚫ ⚪ ⚪ ⚪ ⚪],
+          %w[☉ ☉ ⚫ ⚪ ⚪ ⚪],
+          %w[☉ ☉ ☉ ⚫ ⚪ ⚪],
+          %w[⚫ ☉ ⚫ ⚪ ⚪ ⚪],
+          %w[☉ ⚪ ⚪ ⚪ ⚪ ⚪],
+        ]
+        endgame_cage.instance_variable_set(:@board, end_state)
+        endgame_cage.instance_variable_set(:@last_column_index, 4)
+        endgame_cage.instance_variable_set(:@last_free_space, 3)
+      end
+      
+      it 'ignores the tokens of an opponent' do
+        expect(endgame_cage).to be_game_over
+      end
+    end
+  end
 end
