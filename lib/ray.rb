@@ -1,8 +1,8 @@
 # frozen_string_literal: false
 
-# Ray module creates an array with four nested arrays: horizontal spaces, 
+# Ray module creates an array with four nested arrays: horizontal spaces,
 # vertical spaces and both diagonals that are coming out of the coordinates on
-# Connect Four board
+# Connect Four board.
 module Ray
   def get_rays(column = @last_column_index, row = @last_free_space)
     vertical_ray = @board[column]

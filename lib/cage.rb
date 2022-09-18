@@ -1,16 +1,16 @@
 # frozen_string_literal: false
-
+require 'colorize'
 require_relative '../lib/ray'
 
 # a class that depicts a cage used in the game.
 class Cage
   include Ray
-  attr_accessor :board
-  attr_reader :guess, :last_column_index, :last_free_space
+  attr_accessor :board, :move
+  attr_reader :last_column_index, :last_free_space
 
-  def initialize(guess = nil)
+  def initialize(move = nil)
     @board = Array.new(7) { Array.new(6, '⚪') }
-    @guess = guess
+    @move = move
   end
 
   def possible_moves(possible_moves = [])
@@ -39,8 +39,8 @@ class Cage
 
   def player_turn
     loop do
-      @guess = validate_input(player_input)
-      break if @guess
+      @move = validate_input(player_input)
+      break if @move
 
       puts 'Invalid input!'
     end
@@ -49,18 +49,31 @@ class Cage
   def game_over?
     # column and row are indices of a last move
     rays = get_rays
+    game_over = false
     rays.each do |ray|
       player1_tokens = ray.each_index.select { |space| ray[space] == '⚫' }
-      return true if four_consecutive?(player1_tokens)
+      player2_tokens = ray.each_index.select { |space| ray[space] == '⚫'.red }
+      game_over = true if four_consecutive?(player1_tokens)
+      game_over = true if four_consecutive?(player2_tokens)
     end
+    game_over
   end
 
-  # def game_loop()
-  #   loop do
+  def game_loop
+    loop do
+      display
+      player_turn
+      place_token(@move.to_i - 1, '⚫')
+      break if game_over?
 
-  #     break if game_over?
-  #   end
-  # end
+      display
+      player_turn
+      place_token(@move.to_i - 1, '⚫'.red)
+      break if game_over?
+    end
+    display
+    puts 'game over'
+  end
 
   def validate_input(column_number)
     return column_number if column_number.match?(/^[1-7]$/) &&

@@ -180,30 +180,6 @@ describe Cage do
     end
   end
 
-  describe '#game_loop' do
-    subject(:initialized_cage) { described_class.new }
-    context 'after the first player has placed his token' do
-      before do
-        allow(initialized_cage).to receive(:player_input).and_return('3', '3')
-      end
-
-      xit 'the second player places his next turn' do
-        end_state = [
-          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
-          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
-          %w[⚫ ☉ ⚪ ⚪ ⚪ ⚪],
-          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
-          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
-          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
-          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
-        ]
-        board = initialized_cage.instance_variable_get(:@board)
-        initialized_cage.game_loop
-        expect(board).to eq(end_state)
-      end
-    end
-  end
-
   describe '#game_over?' do
     subject(:endgame_cage) { described_class.new }
 
@@ -288,6 +264,27 @@ describe Cage do
       
       it 'ignores the tokens of an opponent' do
         expect(endgame_cage).to be_game_over
+      end
+    end
+
+    context 'non a game-over' do
+      before do
+        end_state = [
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[⚫ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[☉ ⚫ ⚪ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+          %w[☉ ☉ ☉ ⚫ ⚪ ⚪],
+          %w[⚫ ⚫ ⚫ ⚪ ⚪ ⚪],
+          %w[⚪ ⚪ ⚪ ⚪ ⚪ ⚪],
+        ]
+        endgame_cage.instance_variable_set(:@board, end_state)
+        endgame_cage.instance_variable_set(:@last_column_index, 4)
+        endgame_cage.instance_variable_set(:@last_free_space, 3)
+      end
+
+      it 'does not falsely throw a game over' do
+        expect(endgame_cage).not_to be_game_over
       end
     end
   end
