@@ -1,4 +1,5 @@
 # frozen_string_literal: false
+
 require 'colorize'
 require_relative '../lib/ray'
 
@@ -53,8 +54,7 @@ class Cage
     rays.each do |ray|
       player1_tokens = ray.each_index.select { |space| ray[space] == '⚫' }
       player2_tokens = ray.each_index.select { |space| ray[space] == '⚫'.red }
-      game_over = true if four_consecutive?(player1_tokens)
-      game_over = true if four_consecutive?(player2_tokens)
+      game_over = true if four_consecutive?(player1_tokens) || four_consecutive?(player2_tokens)
     end
     game_over
   end
@@ -72,7 +72,7 @@ class Cage
       break if game_over?
     end
     display
-    puts 'game over'
+    puts 'GAME OVER'
   end
 
   def validate_input(column_number)
@@ -89,7 +89,7 @@ class Cage
   end
 
   def player_input
-    puts 'Enter a number of a column you wish to place token in (1 - 7)'
+    puts "\nEnter a number of a column you wish to place token in (1 - 7)"
     gets.chomp
   end
 end
